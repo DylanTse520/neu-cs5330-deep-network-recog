@@ -1,6 +1,6 @@
 # Yixiang Xie
 # CS 5330 F23
-# Test a CNN network for recognizing MNIST digits
+# Test a CNN network for recognizing MNIST digits and handwritten digits
 
 
 # import statements
@@ -16,7 +16,7 @@ from train import Net
 
 # function to test the network on first 10 MNIST testing images
 def test_network_MNIST(
-    network: nn.Module,
+    network: Net,
     test_loader: DataLoader,
 ):
     # set the network to evaluation mode
@@ -62,7 +62,7 @@ def test_network_MNIST(
 
 # function to test the network on 10 handwritten digit images
 def test_network_handwritten(
-    network: nn.Module,
+    network: Net,
     test_loader: DataLoader,
 ):
     # set the network to evaluation mode
