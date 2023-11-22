@@ -81,7 +81,7 @@ def train_network(
         if batch_idx % 10 == 0:
             # print the loss
             print(
-                "Train epoch {} [{}/{} ({:.0f}%)]\t\tLoss: {:.6f}".format(
+                "Train epoch {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}".format(
                     epoch,
                     batch_idx * len(data),
                     len(train_loader.dataset),
@@ -119,7 +119,7 @@ def test_network(
             # compute the output of the network
             output = network(data)
             # compute the loss
-            test_loss += F.nll_loss(output, target, size_average=False).item()
+            test_loss += F.nll_loss(output, target, reduction="sum").item()
             # get the index of the max log-probability
             pred = output.data.max(1, keepdim=True)[1]
             # increment the correct counter if the prediction is correct
@@ -141,8 +141,8 @@ def test_network(
 
 # main function
 def main(argv):
-    # import MNIST training data
-    training_data = datasets.MNIST(
+    # import MNIST train data
+    train_data = datasets.MNIST(
         root="./data",
         train=True,
         download=True,
@@ -150,23 +150,23 @@ def main(argv):
             [transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))]
         ),
     )
-    # create a data loader for the training data
-    train_loader = DataLoader(training_data, batch_size=64, shuffle=True)
+    # create a data loader for the train data
+    train_loader = DataLoader(train_data, batch_size=64, shuffle=True)
     # show the first six example digits
     for i in range(6):
         # plot each image in the grid
         plt.subplot(2, 3, i + 1)
         # plot the image in grayscale
-        plt.imshow(training_data.data[i], cmap="gray", interpolation="none")
+        plt.imshow(train_data.data[i], cmap="gray", interpolation="none")
         # plot the label as the title of the image
-        plt.title("Label {}".format(training_data.targets[i]))
+        plt.title("Label {}".format(train_data.targets[i]))
         # do not show the axes
         plt.xticks([])
         plt.yticks([])
     plt.show()
 
-    # import MNIST testing data
-    testing_data = datasets.MNIST(
+    # import MNIST test data
+    test_data = datasets.MNIST(
         root="./data",
         train=False,
         download=True,
@@ -174,8 +174,8 @@ def main(argv):
             [transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))]
         ),
     )
-    # create a data loader for the testing data
-    test_loader = DataLoader(testing_data, batch_size=1000, shuffle=True)
+    # create a data loader for the test data
+    test_loader = DataLoader(test_data, batch_size=1000, shuffle=True)
 
     # initialize the network
     network = Net()
@@ -191,7 +191,7 @@ def main(argv):
 
     # test the network before training
     test_network(network, test_loader, test_losses)
-    # train the network for 5 epochs
+    # train the network for 5 epochs, and test it after each epoch
     for epoch in range(1, n_epochs + 1):
         train_network(
             network, optimizer, epoch, train_loader, train_losses, train_counter
