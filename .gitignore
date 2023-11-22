@@ -1,6 +1,6 @@
 .vscode
 build
-data
+data/MNIST
 results
 __pycache__
 .DS_Store
