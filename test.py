@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 from train import Net
 
 
-# function to test the network on first 10 MNIST testing images
+# function to test the network on first 10 MNIST test images
 def test_network_MNIST(
     network: Net,
     test_loader: DataLoader,
@@ -27,7 +27,7 @@ def test_network_MNIST(
     # create a new figure
     plt.figure()
 
-    # for each image in the testing data
+    # for each image in the test data
     with torch.no_grad():
         for idx, (data, target) in enumerate(test_loader):
             # compute the output of the network
@@ -74,7 +74,7 @@ def test_network_handwritten(
     # create a new figure
     plt.figure()
 
-    # for each image in the testing data
+    # for each image in the test data
     with torch.no_grad():
         for idx, (data, target) in enumerate(test_loader):
             # compute the output of the network
@@ -115,6 +115,7 @@ class HandwrittenTransform:
         pass
 
     def __call__(self, x):
+        # convert to grayscale and invert
         x = transforms.functional.rgb_to_grayscale(x)
         return transforms.functional.invert(x)
 
@@ -123,10 +124,10 @@ class HandwrittenTransform:
 def main(argv):
     # read the model from file
     network = Net()
-    network.load_state_dict(torch.load("./results/model.pth"))
+    network.load_state_dict(torch.load("./results/MNIST/model.pth"))
 
-    # import MNIST testing data
-    testing_data = datasets.MNIST(
+    # import MNIST test data
+    test_data = datasets.MNIST(
         root="./data",
         train=False,
         download=True,
@@ -134,10 +135,10 @@ def main(argv):
             [transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))]
         ),
     )
-    # create a subset of the testing data with the first 10 images
-    subset_testing_data = Subset(testing_data, range(10))
-    # create a data loader for the testing data
-    test_loader = DataLoader(subset_testing_data, batch_size=1)
+    # create a subset of the test data with the first 10 images
+    subset_test_data = Subset(test_data, range(10))
+    # create a data loader for the test data
+    test_loader = DataLoader(subset_test_data, batch_size=1)
 
     # test the network on the MNIST subset
     test_network_MNIST(network, test_loader)

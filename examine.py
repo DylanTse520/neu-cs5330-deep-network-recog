@@ -91,7 +91,7 @@ def apply_filters(
 def main(argv):
     # read the model from file
     network = Net()
-    network.load_state_dict(torch.load("./results/model.pth"))
+    network.load_state_dict(torch.load("./results/MNIST/model.pth"))
 
     # print the model
     print(network)

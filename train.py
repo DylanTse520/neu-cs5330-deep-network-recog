@@ -62,10 +62,12 @@ def train_network(
     train_loader: DataLoader,
     train_losses: list,
     train_counter: list,
+    batch_size: int,
+    save_path: str,
 ):
     # set the network to training mode
     network.train()
-    # for each batch in the training data (64 images per batch)
+    # for each batch in the training data
     for batch_idx, (data, target) in enumerate(train_loader):
         # set the gradients to zero
         optimizer.zero_grad()
@@ -92,14 +94,14 @@ def train_network(
             # save the loss and counter
             train_losses.append(loss.item())
             train_counter.append(
-                (batch_idx * 64) + ((epoch - 1) * len(train_loader.dataset))
+                (batch_idx * batch_size) + ((epoch - 1) * len(train_loader.dataset))
             )
             # create ./results if it does not exist
-            if not os.path.exists("./results"):
-                os.makedirs("./results")
+            if not os.path.exists(save_path):
+                os.makedirs(save_path)
             # save the model and optimizer
-            torch.save(network.state_dict(), "./results/model.pth")
-            torch.save(optimizer.state_dict(), "./results/optimizer.pth")
+            torch.save(network.state_dict(), save_path + "/model.pth")
+            torch.save(optimizer.state_dict(), save_path + "/optimizer.pth")
 
 
 # function to test the network
@@ -194,7 +196,14 @@ def main(argv):
     # train the network for 5 epochs, and test it after each epoch
     for epoch in range(1, n_epochs + 1):
         train_network(
-            network, optimizer, epoch, train_loader, train_losses, train_counter
+            network,
+            optimizer,
+            epoch,
+            train_loader,
+            train_losses,
+            train_counter,
+            64,
+            "./results/MNIST",
         )
         test_network(network, test_loader, test_losses)
 
