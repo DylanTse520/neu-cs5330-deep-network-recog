@@ -1,2 +1,5 @@
 .vscode
 build
+data
+results
+__pycache__
