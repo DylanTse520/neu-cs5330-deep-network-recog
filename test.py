@@ -18,6 +18,7 @@ from train import Net
 def test_network_MNIST(
     network: Net,
     test_loader: DataLoader,
+    plot_num: int = 9,
 ):
     # set the network to evaluation mode
     network.eval()
@@ -47,10 +48,10 @@ def test_network_MNIST(
             print("Image {} label: {}".format(idx + 1, target.item()))
 
             # plot only the first nine images
-            if idx == 9:
+            if idx >= plot_num:
                 continue
             # plot each image in the grid
-            plt.subplot(3, 3, idx + 1)
+            plt.subplot((plot_num + 1) // 3, 3, idx + 1)
             # plot the image in grayscale
             plt.imshow(data.squeeze().numpy(), cmap="gray", interpolation="none")
             # plot the label as the title of the image
@@ -80,7 +81,7 @@ def test_network_handwritten(
             # compute the output of the network
             output = network(data)
             # compute the loss
-            test_loss += F.nll_loss(output, target, reduction='sum').item()
+            test_loss += F.nll_loss(output, target, reduction="sum").item()
             # get the index of the max log-probability
             pred = output.data.max(1, keepdim=True)[1]
             # increment the correct counter if the prediction is correct

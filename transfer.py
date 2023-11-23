@@ -41,8 +41,8 @@ def main(argv):
     for param in network.parameters():
         param.requires_grad = False
 
-    # change the last layer of the network to have 3 neurons
-    network.fc2 = nn.Linear(network.fc2.in_features, 3)
+    # change the last layer of the network to have 4 neurons
+    network.fc2 = nn.Linear(network.fc2.in_features, 4)
     
     # print the network
     print(network)
@@ -103,7 +103,7 @@ def main(argv):
     plt.ylabel("negative log likelihood loss")
     
     # test the network on the greek images
-    test_network_MNIST(network, test_loader)
+    test_network_MNIST(network, test_loader, 12)
     plt.show()
 
     return

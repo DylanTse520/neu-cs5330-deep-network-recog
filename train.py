@@ -49,7 +49,7 @@ class Net(nn.Module):
         # x is 320x1. fc1 and a ReLU function are applied here
         x = F.relu(self.fc1(x))
         # x is 50x1. fc2 and a log softmax function are applied here
-        x = F.log_softmax(self.fc2(x))
+        x = F.log_softmax(self.fc2(x), dim=1)
         # x is 10x1
         return x
 
